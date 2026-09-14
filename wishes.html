@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="or">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ganesh Puja Portal | Sandeep</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Noto+Sans+Oriya:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', 'Noto Sans Oriya', sans-serif;
+    }
+
+    body {
+      background: radial-gradient(circle at center, #1a1008 0%, #060402 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    .portal-container {
+      position: relative;
+      width: 100%;
+      max-width: 540px;
+      min-height: 660px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: rgba(15, 10, 5, 0.95);
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 0 60px rgba(255, 102, 0, 0.3);
+    }
+
+    .portal-container::before {
+      content: '';
+      position: absolute;
+      width: 250%;
+      height: 250%;
+      background-image: conic-gradient(
+        transparent 0%,
+        #ff9900 12%,
+        #ff4500 24%,
+        #d81b60 36%,
+        transparent 45%
+      );
+      animation: rotateBorder 5s linear infinite;
+    }
+
+    .portal-inner {
+      position: absolute;
+      inset: 4px;
+      background: linear-gradient(145deg, #1c120a 0%, #0a0704 100%);
+      border-radius: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 22px 50px 22px;
+      z-index: 10;
+      overflow-y: auto;
+      max-height: calc(100vh - 40px);
+    }
+
+    .portal-inner::-webkit-scrollbar {
+      width: 4px;
+    }
+    .portal-inner::-webkit-scrollbar-thumb {
+      background: #ff7700;
+      border-radius: 10px;
+    }
+
+    .ganesha-icon {
+      font-size: 55px;
+      color: #ff9900;
+      text-shadow: 0 0 25px #ff6600, 0 0 50px #ff3300;
+      animation: floatGlow 2.5s ease-in-out infinite;
+      margin-bottom: 8px;
+    }
+
+    .view-screen {
+      width: 100%;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      animation: fadeIn 0.35s ease forwards;
+    }
+
+    .view-screen.active {
+      display: flex;
+    }
+
+    .back-btn {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 153, 0, 0.3);
+      color: #ff9900;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      font-size: 18px;
+      transition: 0.3s;
+      z-index: 20;
+    }
+
+    .back-btn:hover {
+      background: #ff7700;
+      color: #fff;
+      transform: scale(1.1);
+      box-shadow: 0 0 15px #ff7700;
+    }
+
+    h2 {
+      font-size: 20px;
+      text-align: center;
+      color: #ffb74d;
+      margin-bottom: 18px;
+      letter-spacing: 0.5px;
+      text-shadow: 0 0 10px rgba(255, 183, 77, 0.3);
+    }
+
+    .btn-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      width: 100%;
+      margin-top: 6px;
+    }
+
+    .choice-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 153, 0, 0.2);
+      border-radius: 12px;
+      padding: 10px 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      color: #f5f5f5;
+    }
+
+    .choice-card:hover {
+      background: rgba(255, 102, 0, 0.15);
+      border-color: #ff9900;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 18px rgba(255, 102, 0, 0.3);
+    }
+
+    .choice-card .main-txt {
+      font-size: 14.5px;
+      font-weight: 600;
+      color: #ffcc80;
+    }
+
+    .choice-card .sub-txt {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.5);
+      margin-top: 2px;
+    }
+
+    .lang-box {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      width: 100%;
+      max-width: 280px;
+      margin-top: 20px;
+    }
+
+    .lang-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 153, 0, 0.3);
+      border-radius: 16px;
+      padding: 16px;
+      text-align: center;
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: 700;
+      transition: 0.3s;
+      color: #ffb74d;
+    }
+
+    .lang-card:hover {
+      background: linear-gradient(90deg, #ff7700, #ff9900);
+      color: #111;
+      box-shadow: 0 0 25px rgba(255, 119, 0, 0.6);
+      transform: scale(1.03);
+    }
+
+    .input-box-container {
+      width: 100%;
+      max-width: 320px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .custom-input {
+      width: 100%;
+      padding: 14px 16px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1.5px solid rgba(255, 153, 0, 0.4);
+      border-radius: 12px;
+      color: #fff;
+      font-size: 16px;
+      outline: none;
+      text-align: center;
+      transition: 0.3s;
+    }
+
+    .custom-input:focus {
+      border-color: #ff9900;
+      box-shadow: 0 0 15px rgba(255, 153, 0, 0.5);
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .proceed-btn {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(45deg, #ff7700, #ff9900);
+      border: none;
+      border-radius: 12px;
+      color: #111;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 4px 15px rgba(255, 102, 0, 0.4);
+    }
+
+    .proceed-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 102, 0, 0.6);
+    }
+
+    .wish-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 153, 0, 0.25);
+      border-radius: 20px;
+      padding: 24px 20px;
+      text-align: center;
+      width: 100%;
+      box-shadow: inset 0 0 25px rgba(255, 119, 0, 0.08);
+      margin-top: 10px;
+    }
+
+    .wish-heading {
+      font-size: 21px;
+      font-weight: 700;
+      color: #ff9900;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      text-shadow: 0 0 15px rgba(255, 153, 0, 0.6);
+      margin-bottom: 6px;
+    }
+
+    .relation-badge {
+      display: inline-block;
+      background: rgba(255, 153, 0, 0.15);
+      border: 1px solid #ff9900;
+      color: #ffb74d;
+      font-size: 11px;
+      padding: 3px 12px;
+      border-radius: 20px;
+      margin-bottom: 18px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .quote-box {
+      background: rgba(0, 0, 0, 0.25);
+      border-left: 3px solid #ff9900;
+      padding: 16px 14px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .quote-txt {
+      font-size: 14.5px;
+      line-height: 1.9;
+      color: #fff3e0;
+      font-weight: 500;
+      white-space: pre-line;
+    }
+
+    .closing-txt {
+      font-size: 14px;
+      color: #ff9900;
+      font-weight: 600;
+      border-top: 1px dashed rgba(255, 153, 0, 0.3);
+      padding-top: 14px;
+      line-height: 1.6;
+    }
+
+    .signature {
+      position: fixed;
+      bottom: 16px;
+      right: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: rgba(255, 255, 255, 0.45);
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(255, 153, 0, 0.25);
+      backdrop-filter: blur(10px);
+      padding: 6px 14px;
+      border-radius: 20px;
+      z-index: 100;
+    }
+
+    .signature span {
+      color: #ff9900;
+      font-weight: 700;
+      text-shadow: 0 0 10px rgba(255, 153, 0, 0.6);
+    }
+
+    @keyframes rotateBorder {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes floatGlow {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-6px) scale(1.06); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="portal-container">
+    <button class="back-btn" id="backBtn" onclick="goBack()" style="display: none;">←</button>
+
+    <div class="portal-inner">
+      <div class="ganesha-icon">🕉️</div>
+
+      <!-- SCREEN 1: Language Picker -->
+      <div class="view-screen active" id="screen-lang">
+        <h2>Select Language / ଭାଷା ବାଛନ୍ତୁ</h2>
+        <div class="lang-box">
+          <div class="lang-card" onclick="chooseLang('odia')">ଓଡ଼ିଆ (Odia)</div>
+          <div class="lang-card" onclick="chooseLang('en')">English</div>
+        </div>
+      </div>
+
+      <!-- SCREEN 2: Relation Grid -->
+      <div class="view-screen" id="screen-rel">
+        <h2 id="rel-title">ଆପଣ ସନ୍ଦୀପଙ୍କର କିଏ ହେବେ?</h2>
+        <div class="btn-grid" id="rel-grid"></div>
+      </div>
+
+      <!-- SCREEN 3: Name / Nickname Input -->
+      <div class="view-screen" id="screen-input">
+        <h2 id="input-title">ନାମ ଲେଖନ୍ତୁ</h2>
+        <div class="input-box-container">
+          <input type="text" id="user-nickname" class="custom-input" placeholder="Type name here..." autocomplete="off" />
+          <button class="proceed-btn" onclick="submitName()">ଆଗକୁ ବଢ଼ନ୍ତୁ (Proceed) ➔</button>
+        </div>
+      </div>
+
+      <!-- SCREEN 4: Showcase -->
+      <div class="view-screen" id="screen-wish">
+        <div class="wish-card">
+          <div class="wish-heading" id="wish-headline">HAPPY GANESH PUJA</div>
+          <span class="relation-badge" id="badge-rel">RELATION</span>
+          <div class="quote-box">
+            <p class="quote-txt" id="quote-content"></p>
+          </div>
+          <div class="closing-txt" id="closing-content"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="signature">
+    Made by <span>Sandeep</span> ⚡
+  </div>
+
+  <script>
+    let currentLang = 'odia';
+    let viewHistory = ['screen-lang'];
+    let selectedRelationKey = '';
+
+    const relationData = {
+      /* ================= 1. ELDERS (NO NAME INPUT) ================= */
+      papa: {
+        askName: false,
+        odia: {
+          label: "ବାପା",
+          sub: "Father",
+          heading: "ଶୁଭ ଗଣେଶ ପୂଜା ବାପା!",
+          quote: "ମୋ ଜୀବନର ପ୍ରଥମ ହିରୋ ଏବଂ ସବୁଠୁ ବଡ଼ ଶକ୍ତି ଆପଣ।\nନିଜ ସୁଖକୁ ଭୁଲି ଆମ ସ୍ୱପ୍ନ ପୂରଣ କରିବାକୁ ଆପଣ ସାରା ଜୀବନ ପରିଶ୍ରମ କରିଛନ୍ତି।\nଆପଣଙ୍କ ତ୍ୟାଗ ଆଉ ମାର୍ଗଦର୍ଶନ ହିଁ ମୋ ପାଇଁ ଦୁନିଆର ସବୁଠାରୁ ବଡ଼ ସମ୍ପତ୍ତି।\nଆଜିର ଏହି ପବିତ୍ର ଦିନରେ ମୁଁ ପ୍ରଭୁ ଗଜାନନଙ୍କ ନିକଟରେ ପ୍ରାର୍ଥନା କରୁଛି,\nଭଗବାନ ଆପଣଙ୍କୁ ଦୀର୍ଘାୟୁ, ଉତ୍ତମ ସ୍ୱାସ୍ଥ୍ୟ ଏବଂ ଚିରକାଳ ହସଖୁସି ପ୍ରଦାନ କରନ୍ତୁ।",
+          closing: "ଆପଣଙ୍କ ପୁଅ ସନ୍ଦୀପ ତରଫରୁ ଚରଣ ତଳେ କୋଟି କୋଟି ପ୍ରଣାମ! 🙏"
+        },
+        en: {
+          label: "Father",
+          sub: "Papa",
+          heading: "Happy Ganesh Chaturthi, Papa!",
+          quote: "You are the foundation on which all my aspirations stand tall.\nYour quiet perseverance through every hardship has taught me true courage.\nThank you for working tirelessly behind the scenes to build my future.\nMay Lord Ganesha remove every strain from your life and award you serenity, health, and joy.",
+          closing: "Bowing at your holy feet. Your son, Sandeep. 🙏"
+        }
+      },
+
+      maa: {
+        askName: false,
+        odia: {
+          label: "ମାଆ",
+          sub: "Mother",
+          heading: "ଶୁଭ ଗଣେଶ ପୂଜା ମାଆ!",
+          quote: "ମାଆ, ତୁମେ ହିଁ ମୋ ସଂସାରର ସବୁଠୁ ମୂଲ୍ୟବାନ ଆଶୀର୍ବାଦ।\nତୁମ ଅକୁଣ୍ଠ ସ୍ନେହ ଆଉ ନିଃସ୍ୱାର୍ଥପର ପ୍ରାର୍ଥନା ସବୁବେଳେ ମୋତେ ବିପଦରୁ ରକ୍ଷା କରିଛି।\nତୁମେ ହସିଲେ ଆମ ପୁରା ଘର ଆଲୋକିତ ହୋଇଉଠେ।\nବିଘ୍ନହର୍ତ୍ତା ଶ୍ରୀ ଗଣେଶ ତୁମ ଜୀବନରୁ ସବୁ ଦୁଃଖ କଷ୍ଟ ଦୂର କରିଦିଅନ୍ତୁ,\nଏବଂ ତୁମ ମୁହଁରେ ସବୁଦିନ ପାଇଁ ପବିତ୍ର ହସ ବଜାୟ ରଖନ୍ତୁ।",
+          closing: "ତୁମ କୋଳ ହିଁ ମୋ ସ୍ୱର୍ଗ। ଶ୍ରୀ ଗଣେଶ ପୂଜାର ଅନେକ ଶୁଭେଚ୍ଛା ମାଆ! 🌸"
+        },
+        en: {
+          label: "Mother",
+          sub: "Maa",
+          heading: "Happy Ganesh Chaturthi, Maa!",
+          quote: "Your warmth is my ultimate haven in this fast and challenging world.\nYour silent sacrifices and prayerful blessings keep me guarded wherever I go.\nMay Lord Siddhivinayak extinguish every pain and bless your heart with abundant joy.\nWishing my beloved Maa a deeply peaceful and blessed Ganesh Chaturthi.",
+          closing: "With eternal devotion and endless hugs. From Sandeep! 🌸"
+        }
+      },
+
+      bada_bapa: {
+        askName: false,
+        odia: {
+          label: "ବଡ଼ ବାପା",
+          sub: "Elder Uncle",
+          heading: "ଶୁଭ ଗଣେଶ ପୂଜା ବଡ଼ ବାପା!",
+          quote: "ପରିବାରର ଛାତ ସଦୃଶ ଆପଣଙ୍କ ଉପସ୍ଥିତି ସବୁବେଳେ ଆମକୁ ସୁରକ୍ଷା ଓ ଶକ୍ତି ଦେଇଛି।\nଆପଣଙ୍କ ଅନୁଭବ ଏବଂ ଶାନ୍ତ ସ୍ୱଭାବର ମାର୍ଗଦର୍ଶନ ଆମ ସମସ୍ତଙ୍କ ପାଇଁ ଏକ ଶିକ୍ଷା।\nପ୍ରଭୁ ଶ୍ରୀ ଗଜାନନ ଆପଣଙ୍କୁ ନିରୋଗ ଜୀବନ, ଆନ୍ତରିକ ଶାନ୍ତି ଏବଂ ଦୀର୍ଘାୟୁ ପ୍ରଦାନ କରନ୍ତୁ।",
+          closing: "ଚରଣ ତଳେ ପ୍ରଣାମ ସହ ଗଣେଶ ପୂଜାର ହାର୍ଦ୍ଦିକ ଶୁଭେଚ୍ଛା ବଡ଼ ବାପା! 🙏"
+        },
+        en: {
+          label: "Bada Bapa",
+          sub: "Elder Uncle",
+          heading: "Happy Ganesh Chaturthi, Bada Bapa!",
+          quote: "Your seasoned leadership keeps our extended family firmly anchored.\nThank you for always wrapping us in wisdom, structure, and paternal care.\nMay Lord Ganesha bestow unbroken health, contentment, and high esteem upon your life.",
+          closing: "Seeking your divine blessings always. Regards, Sandeep. 🙏"
+        }
+      },
+
+      bada_maa: {
+        askName: false,
+        odia: {
+          label: "ବଡ଼ ମାଆ",
+          sub: "Elder Aunt",
+          heading: "ଶୁଭ ଗଣେଶ ପୂଜା ବଡ଼ ମାଆ!",
+          quote: "ଆପଣଙ୍କ ମାତୃତୁଲ୍ୟ ସ୍ନେହ ଏବଂ ସହୃଦୟତା ପରିବାରକୁ ଏକତ୍ର ବାନ୍ଧି ରଖିଛି।\nଆପଣଙ୍କ ଆଶୀର୍ବାଦ ଆମ ପାଇଁ ସବୁବେଳେ ପ୍ରେରଣାଦାୟକ।\nବିଘ୍ନରାଜ ଗଣପତି ଆପଣଙ୍କୁ ସର୍ବଦା ସୁସ୍ଥ, ଆନନ୍ଦମୟ ଏବଂ ଚିନ୍ତାମୁକ୍ତ ରଖନ୍ତୁ।",
+          closing: "ପ୍ରଣାମ ସହ ଶ୍ରୀ ଗଣେଶ ପୂଜାର ଅନେକ ଶୁଭକାମନା ବଡ଼ ମାଆ! 🌺"
+        },
+        en: {
+          label: "Bada Maa",
+          sub: "Elder Aunt",
+          heading: "Happy Ganesh Chaturthi, Bada Maa!",
+          quote: "Your motherly grace and kindness bind our family together with warmth.\nMay Lord Ganesha hear every prayer of yours and fill your life with pure tranquility.\nWishing you a delightful and spiritually rich Ganesh festival.",
+          closing: "Respectful pranam from Sandeep! 🌺"
+        }
+      },
+
+      dada: {
+        askName: false,
+        odia: {
+          label: "ଦାଦା (କାକା)",
+          sub: "Paternal Uncle",
+          heading: "ଶୁଭ ଗଣେଶ ପୂଜା ଦାଦା!",
+          quote: "ଜଣେ ଗୁରୁଜନ ଭାବରେ ପ୍ରେରଣା ଏବଂ ବଡ଼ ଭାଇ ଭଳି ସହଯୋଗ ଆପଣଙ୍କ ଠାରୁ ସବୁବେଳେ ମିଳିଛି।\nଆପଣଙ୍କ ହସମୁଖ ବ୍ୟକ୍ତିତ୍ୱ ପରିବାରକୁ ସର୍ବଦା ଜୀବନ୍ତ ରଖିଥାଏ।\nପ୍ରଭୁ ଶ୍ରୀ ଗଣେଶ ଆପଣଙ୍କ କାର୍ଯ୍ୟକ୍ଷେତ୍ର ଓ ଜୀବନରେ ସୁଖ, ସମୃଦ୍ଧି ଏବଂ ପ୍ରଚୁର ଉନ୍ନତି ଦିଅନ୍ତୁ।",
+          closing: "ହାର୍ଦ୍ଦିକ ପ୍ରଣାମ ସହ ଗଣେଶ ପୂଜାର ଅନେକ ଶୁଭକାମନା ଦାଦା! ✨"
+        },
+        en: {
+          label: "Dada",
+          sub: "Uncle",
+          heading: "Happy Ganesh Chaturthi, Dada!",
+          quote: "You strike the perfect balance between an encouraging mentor and a supportive guardian.\nMay Lord Ganesha eliminate all impediments from your plans and propel you towards monumental milestones.\nWishing you immense energy, prosperity, and peace.",
+          closing: "Warm regards and pranam, Sandeep! ✨"
+        }
+      },
+
+      khudi: {
+        askName: false,
+        odia: {
+          label: "ଖୁଡ଼ୀ",
+          sub: "Paternal Aunt",
+          heading: "ଶୁଭ ଗଣେଶ ପୂଜା ଖୁଡ଼ୀ!",
+          quote: "ଆପଣଙ୍କ ଆନ୍ତରିକ ସ୍ନେହ ଆଉ ସ୍ନେହଭରା କଥା ସବୁବେଳେ ଘରକୁ ଆନନ୍ଦିତ ରଖିଛି।\nଭଗବାନ ବିଘ୍ନରାଜ ଆପଣଙ୍କ ସଂସାରକୁ ଧନ, ଧାନ୍ୟ, ସୁଖ ଓ ଶାନ୍ତିରେ ପରିପୂର୍ଣ୍ଣ ରଖନ୍ତୁ।",
+          closing: "ପ୍ରଭୁ ଶ୍ରୀ ଗଣେଶଙ୍କ କୃପା ସବୁବେଳେ ଆପଣଙ୍କ ଉପରେ ରହୁ। ପ୍ରଣାମ ଖୁଡ଼ୀ! 🌸"
+        },
+        en: {
+          label: "Khudi",
+          sub: "Aunt",
+          heading: "Happy Ganesh Chaturthi, Khudi!",
+          quote: "Your caring aura and welcoming nature brighten the entire house.\nMay the divine presence of Lord Ganesha bless your life with longevity, laughter, and fortune.",
+          closing: "Warm pranam and best festive wishes from Sandeep! 🌸"
+        }
+      },
+
+      mamu: {
+        askName: false,
+        odia: {
+          label: "ମାମୁଁ",
+          sub: "Maternal Uncle",
+          heading: "ଶୁଭ ଗଣେଶ ପୂଜା ମାମୁଁ!",
+          quote: "ମାମୁଁ ଘରର ପ୍ରତ୍ୟେକ ମିଠା ସ୍ମୃତି ଏବଂ ଆପଣଙ୍କ ଆନ୍ତରିକ ସ୍ନେହ ମୋ ହୃଦୟରେ ଚିରସ୍ମରଣୀୟ।\nଆପଣଙ୍କ ଉତ୍ସାହଜନକ କଥା ମୋତେ ସବୁବେଳେ ଆଗକୁ ବଢ଼ିବାକୁ ପ୍ରେରଣା ଦିଏ।\nପ୍ରଭୁ ସିଦ୍ଧିବିନାୟକ ଆପଣଙ୍କ ଜୀବନକୁ ସଫଳତା ଏବଂ ଆନନ୍ଦରେ ଭରି ରଖନ୍ତୁ।",
+          closing: "ଭଣଜା ସନ୍ଦୀପ ତରଫରୁ ଶ୍ରଦ୍ଧାପୂର୍ଣ୍ଣ ପ୍ରଣାମ ଓ ଶୁଭକାମନା! 🚩"
+        },
+        en: {
+          label: "Mamu",
+          sub: "Maternal Uncle",
+          heading: "Happy Ganesh Chaturthi, Mamu!",
+          quote: "Memories at your home are forever engraved in gold in my heart.\nThank you for always lifting my spirits and offering genuine support.\nMay Lord Ganesha reward your diligence with extraordinary growth and everlasting prosperity.",
+          closing: "Respectful regards from your nephew, Sandeep! 🚩"
+        }
+      },
+
+      mai: {
+        askName: false,
+        odia: {
+          label: "ମାଇଁ",
+          sub: "Maternal Aunt",
+          heading: "ଶୁଭ ଗଣେଶ ପୂଜା ମାଇଁ!",
+          quote: "ମାମୁଁ ଘରକୁ ଗଲେ ଆପଣଙ୍କ ସ୍ନେହଭରା ଆଦର କେବେ ଭୁଲିହେବ ନାହିଁ।\nପ୍ରଭୁ ଶ୍ରୀ ଗଣେଶ ଆପଣଙ୍କ ପରିବାରକୁ ଖୁସି ଏବଂ ଉତ୍ତମ ସ୍ୱାସ୍ଥ୍ୟରେ ସଜାଇ ରଖନ୍ତୁ।",
+          closing: "ଗଣେଶ ପୂଜାର ଅନେକ ଅନେକ ଶୁଭେଚ୍ଛା ଓ ପ୍ରଣାମ ମାଇଁ! 🌺"
+        },
+        en: {
+          label: "Mai",
+          sub: "Maternal Aunt",
+          heading: "Happy Ganesh Chaturthi, Mai!",
+          quote: "Your affectionate warmth and hospitality make Mamu's place feel like heaven.\nMay Lord Ganesha shower supreme health and good luck onto you and the household.",
+          closing: "Heartfelt pranam from Sandeep! 🌺"
+        }
+      },
+
+      piosa: {
+        askName: false,
+        odia: {
+          label: "ପିଉସା",
+          sub: "Paternal Uncle (Fufa)",
+          heading: "ଶୁଭ ଗଣେଶ ପୂଜା ପିଉସା!",
+          quote: "ଆପଣଙ୍କ ଗାମ୍ଭୀର୍ଯ୍ୟପୂର୍ଣ୍ଣ ବ୍ୟକ୍ତିତ୍ୱ ଏବଂ ସ୍ନେହଭରା ମାର୍ଗଦର୍ଶନ ଆମ ପାଇଁ ଅତ୍ୟନ୍ତ ମୂଲ୍ୟବାନ।\nପ୍ରଭୁ ଶ୍ରୀ ଗଣେଶ ଆପଣଙ୍କୁ ନିରୋଗ ଜୀବନ ଏବଂ ସମୃଦ୍ଧି ପ୍ରଦାନ କରନ୍ତୁ।",
+          closing: "ପ୍ରଣାମ ସହ ପବିତ୍ର ଗଣେଶ ପୂଜାର ହାର୍ଦ୍ଦିକ ଶୁଭକାମନା ପିଉସା! 🙏"
+        },
+        en: {
+          label: "Piosa",
+          sub: "Fufa Ji",
+          heading: "Happy Ganesh Chaturthi, Piosa!",
+          quote: "Your steady encouragement and honorable presence enrich our family gatherings.\nMay Lord Ganesha grant you abundant prosperity, high spirits, and great health.",
+          closing: "Warm pranam from Sandeep! 🙏"
+        }
+      },
+
+      piosi: {
+        askName: false,
+        odia: {
+          label: "ପିଉସୀ",
+          sub: "Paternal Aunt (Bua)",
+          heading: "ଶୁଭ ଗଣେଶ ପୂଜା ପିଉସୀ!",
+          quote: "ପିଉସୀଙ୍କ ସ୍ନେହ ସବୁବେଳେ ମାଆ ଭଳି ମିଠା ଏବଂ ନିର୍ମଳ।\nପ୍ରଭୁ ବିଘ୍ନହର୍ତ୍ତା ଆପଣଙ୍କ ସଂସାରକୁ ହସଖୁସି ଏବଂ ସମୃଦ୍ଧିରେ ପରିପୂର୍ଣ୍ଣ ରଖନ୍ତୁ।",
+          closing: "ସନ୍ଦୀପ ତରଫରୁ ପ୍ରଣାମ ଓ ଗଣେଶ ପୂଜାର ଅନେକ ଶୁଭେଚ୍ଛା! 🌸"
+        },
+        en: {
+          label: "Piosi",
+          sub: "Bua Ji",
+          heading: "Happy Ganesh Chaturthi, Piosi!",
+          quote: "Your affectionate calls and maternal care are deeply cherished.\nMay Ganesha bless your life with continuous harmony, peace, and abundance.",
+          closing: "Respectful regards and pranam, Sandeep! 🌸"
+        }
+      },
+
+      grandparents: {
+        askName: false,
+        odia: {
+          label: "ଜେଜେ / ଆଜା - ଆଇ",
+          sub: "Grandparents",
+          heading: "ଶୁଭ ଗଣେଶ ପୂଜା!",
+          quote: "ଆପଣମାନଙ୍କ ପବିତ୍ର ଆଶୀର୍ବାଦ ଆଉ ସଂସ୍କାର ହିଁ ଆମ ପରିବାରର ପ୍ରକୃତ ସମ୍ପଦ।\nପ୍ରଭୁ ଶ୍ରୀ ଗଜାନନ ଆପଣଙ୍କୁ ନିରୋଗ, ସୁସ୍ଥ ଏବଂ ଦୀର୍ଘ ଜୀବନ ପ୍ରଦାନ କରନ୍ତୁ।",
+          closing: "ଚରଣ ତଳେ କୋଟି କୋଟି ପ୍ରଣାମ ସହ ଶୁଭ ଗଣେଶ ପୂଜା! 🙏"
+        },
+        en: {
+          label: "Grandparents",
+          sub: "Dada / Dadi / Nana / Nani",
+          heading: "Happy Ganesh Chaturthi!",
+          quote: "Your lifetime of love and prayers are the greatest shield our home possesses.\nWe pray Lord Ganesha blesses you with peaceful longevity, serene health, and joy.",
+          closing: "Prostrating at your holy feet with deep reverence. Sandeep. 🙏"
+        }
+      },
+
+      /* ================= 2. SIBLINGS & PEERS (TAKES NAME INPUT) ================= */
+      bada_bhai: {
+        askName: true,
+        odia: {
+          label: "ବଡ଼ ଭାଇ",
+          sub: "Elder Brother",
+          heading: "ଶୁଭ ଗଣେଶ ପୂଜା {NAME} ଭାଇ! 🙏",
+          quote: "ବାପାଙ୍କ ପରେ ଜଣେ ଛୋଟ ଭାଇ ପାଇଁ ତାର ବଡ଼ ଭାଇ ହିଁ ସବୁଠୁ ବଡ଼ ସାହାରା ହୋଇଥାଏ।\nଆପଣଙ୍କ ମାର୍ଗଦର୍ଶନ ଏବଂ ସାହାଯ୍ୟ ମୋତେ ସବୁବେଳେ ନିର୍ଭୟରେ ଆଗକୁ ବଢ଼ିବାକୁ ଶକ୍ତି ଦିଏ।\nଆପଣଙ୍କ ପରିଶ୍ରମ ଦେଖି ମୁଁ ବହୁତ କିଛି ଶିଖେ।\nପ୍ରଭୁ ବିଘ୍ନରାଜ ଗଣେଶ ଆପଣଙ୍କ କ୍ୟାରିୟରର ସବୁ ବାଧାବିଘ୍ନ ଦୂର କରି ଆପଣଙ୍କୁ ଶୀର୍ଷ ସଫଳତା ପ୍ରଦାନ କରନ୍ତୁ!",
+          closing: "ସାନ ଭାଇ ସନ୍ଦୀପ ତରଫରୁ ଶ୍ରଦ୍ଧାପୂର୍ଣ୍ଣ ପ୍ରଣାମ ଓ ହାର୍ଦ୍ଦିକ ଶୁଭେଚ୍ଛା! 🚀"
+        },
+        en: {
+          label: "Elder Brother",
+          sub: "Bada Bhai",
+          heading: "Happy Ganesh Chaturthi, {NAME} Bhai! 🙏",
+          quote: "Having an elder brother like you is having a permanent safeguard and guide in life.\nWatching you navigate life inspires me to be disciplined, bold, and focused.\nThank you for always protecting me and pointing me in the right direction.\nMay Lord Ganesha clear every hurdle from your journey and grant you massive career victories!",
+          closing: "Respectful regards and love from your younger brother, Sandeep. 🚀"
+        }
+      },
+
+      sana_bhai: {
+        askName: true,
+        odia: {
+          label: "ସାନ ଭାଇ",
+          sub: "Younger Brother",
+          heading: "Happy Ganesh Puja, {NAME}! 🔥",
+          quote: "ତୋର ଦୁଷ୍ଟାମି ଆଉ ମସ୍ତି ଘରର ପରିବେଶକୁ ସବୁବେଳେ ହସଖୁସିରେ ରଖେ।\nମନେ ରଖିବୁ, ଜୀବନରେ ଯାହା ବି ହେଉ, ତୋ ବଡ଼ ଭାଇ ସବୁବେଳେ ତୋ ପଛରେ ଚଟାଣ ଭଳି ଛିଡ଼ା ହୋଇଛି।\nନିଜ ସ୍ୱପ୍ନ ପାଇଁ ପୁରା ଦମ୍‌ରେ ପରିଶ୍ରମ କର, ତୁ ବହୁତ ଆଗକୁ ଯିବୁ।\nପ୍ରଭୁ ଶ୍ରୀ ଗଣେଶ ତୋତେ ତୀକ୍ଷ୍ଣ ବୁଦ୍ଧି ଏବଂ ଅପାର ସଫଳତା ପ୍ରଦାନ କରନ୍ତୁ!",
+          closing: "ତୋ ବଡ଼ ଭାଇ ସନ୍ଦୀପ ତରଫରୁ ଢେର୍ ସାରା ସ୍ନେହ ଓ ଭଲପାଇବା! ⚡"
+        },
+        en: {
+          label: "Younger Brother",
+          sub: "Chhota Bhai",
+          heading: "Happy Ganesh Chaturthi, {NAME}! 🔥",
+          quote: "From pulling each other's legs to backing each other up, you make life vibrant.\nNever underestimate your potential; grind consistently towards your goals.\nRemember that your big brother is always watching your back through every storm.\nMay Lord Ganesha remove every distraction and deliver extraordinary wins to your corner!",
+          closing: "Endless love and power to you! Your brother, Sandeep. ⚡"
+        }
+      },
+
+      bada_bhauni: {
+        askName: true,
+        odia: {
+          label: "ବଡ଼ ଭଉଣୀ (ଅପା)",
+          sub: "Elder Sister (Apa)",
+          heading: "ଶୁଭ ଗଣେଶ ପୂଜା {NAME} ଅପା! 🌸",
+          quote: "ମାଆ ଭଳି ଯତ୍ନ ନେବା ଆଉ ମୋ ଭୁଲକୁ ସୁଧାରିବା—ଏହା କେବଳ ଗୋଟିଏ ବଡ଼ ଭଉଣୀ ହିଁ କରିପାରେ।\nତୁମ ସ୍ନେହ ଆଉ ଶୁଭକାମନା ସବୁବେଳେ ମୋ ପାଇଁ ଏକ ଦିବ୍ୟ ଶକ୍ତି।\nଭଗବାନ ବିଘ୍ନହର୍ତ୍ତା ତୁମ ଜୀବନରେ ସୁଖ, ଶାନ୍ତି, ସମୃଦ୍ଧି ଏବଂ ସଫଳତା ଭରିଦିଅନ୍ତୁ!",
+          closing: "ତୁମ ସାନ ଭାଇ ସନ୍ଦୀପ ତରଫରୁ ପ୍ରଣାମ ଓ ଅଶେଷ ଶୁଭେଚ୍ଛା ଅପା! 🙏✨"
+        },
+        en: {
+          label: "Elder Sister",
+          sub: "Badi Didi / Apa",
+          heading: "Happy Ganesh Chaturthi, {NAME} Didi! 🌸",
+          quote: "You have always been a second mother to me, combining protection with selfless love.\nYour prayers and gentle scolding have shaped me into a stronger individual.\nMay Lord Ganesha illuminate your destiny with boundless smiles, peace, and dreams fulfilled!",
+          closing: "Warmest pranam and unconditional love! Your brother, Sandeep. 🙏✨"
+        }
+      },
+
+      sana_bhauni: {
+        askName: true,
+        odia: {
+          label: "ସାନ ଭଉଣୀ",
+          sub: "Younger Sister",
+          heading: "Happy Ganesh Puja, {NAME}! 🍫💖",
+          quote: "ଆମ ଘରର ଚୁଲ୍‌ବୁଲି ରାଜକୁମାରୀ! ତୋ ମିଠା କଥା ଆଉ ହସ ହିଁ ଆମ ଖୁସି।\nକେବେ ନିଜକୁ କମଜୋର୍ ଭାବିବୁ ନାହିଁ, ତୋ ଭାଇ ତୋ ରକ୍ଷା ପାଇଁ ସବୁବେଳେ ଉପସ୍ଥିତ ଅଛି।\nଖୁବ୍ ମନ ଦେଇ ପଢ଼ ଆଉ ନିଜ ପରିବାରର ନାଁ ଉଜ୍ଜ୍ୱଳ କର।\nପ୍ରଭୁ ଶ୍ରୀ ଗଣେଶ ତୋତେ ସର୍ବଦା ସୁରକ୍ଷିତ ଏବଂ ଖୁସିରେ ରଖନ୍ତୁ!",
+          closing: "ତୋ ଭାଇ ସନ୍ଦୀପ ତରଫରୁ ବହୁତ ବହୁତ ସ୍ନେହ ଆଉ ଚକୋଲେଟ୍! 🍬✨"
+        },
+        en: {
+          label: "Younger Sister",
+          sub: "Chhoti Behen",
+          heading: "Happy Ganesh Chaturthi, {NAME}! 🍫💖",
+          quote: "Your banter and contagious laugh turn an ordinary house into a lively home.\nDream freely and pursue your passions fearlessly—your brother is always here for you.\nMay Lord Ganesha bless you with sharp intellect, happiness, and supreme achievements!",
+          closing: "Tons of love and festive chocolates from your brother, Sandeep! 🍬✨"
+        }
+      },
+
+      bhabhi: {
+        askName: true,
+        odia: {
+          label: "ଭାଉଜ (Bhabhi)",
+          sub: "Sister-in-Law",
+          heading: "ଶୁଭ ଗଣେଶ ପୂଜା {NAME} ଭାଉଜ! 🌺",
+          quote: "ଆମ ଘରକୁ ଆସି ପରିବାରକୁ ଆହୁରି ସୁନ୍ଦର ଭାବରେ ସଜାଇ ଦେଇଥିବା ମୋର ପ୍ରିୟ ଭାଉଜ!\nଏକା ସାଙ୍ଗରେ ମାଆ ଭଳି ଆଦର ଏବଂ ସାଙ୍ଗ ଭଳି ବୁଝାମଣା ଆପଣଙ୍କ ଠାରୁ ମିଳିଛି।\nପ୍ରଭୁ ସିଦ୍ଧିବିନାୟକ ଆପଣଙ୍କ ଦାମ୍ପତ୍ୟ ଜୀବନ ଏବଂ ସଂସାରକୁ ସୁଖ, ଶାନ୍ତି ଓ ସମୃଦ୍ଧିରେ ଭରି ରଖନ୍ତୁ!",
+          closing: "ଦିଅର ସନ୍ଦୀପ ତରଫରୁ ଶ୍ରଦ୍ଧାପୂର୍ଣ୍ଣ ପ୍ରଣାମ ଓ ଶୁଭକାମନା! 🙏✨"
+        },
+        en: {
+          label: "Bhabhi",
+          sub: "Sister-in-Law",
+          heading: "Happy Ganesh Chaturthi, {NAME} Bhabhi! 🌺",
+          quote: "You brought extra light, sweetness, and cohesion into our household from day one.\nThank you for treating me with the care of an elder and the warmth of a great friend.\nMay Lord Ganesha bless your life with lasting joy, sound health, and beautiful prosperity.",
+          closing: "Warm regards and pranam from your brother-in-law, Sandeep! 🙏✨"
+        }
+      },
+
+      jijaji: {
+        askName: true,
+        odia: {
+          label: "ଭିଣୋଇ (Jijaji)",
+          sub: "Sister's Husband",
+          heading: "ଶୁଭ ଗଣେଶ ପୂଜା {NAME} ଭାଇ (ଭିଣୋଇ)! 🚩",
+          quote: "ଆମ ପରିବାରର ସମ୍ମାନ ଏବଂ ବଡ଼ ଭାଇ ଭଳି ସ୍ନେହ ଦେଇଥିବା ମୋର ପ୍ରିୟ ଭିଣୋଇ!\nଆପଣଙ୍କ ଉପସ୍ଥିତି ସବୁବେଳେ ଆମ ପରିବାରରେ ଆନନ୍ଦ ବଢ଼ାଇଦିଏ।\nପ୍ରଭୁ ଶ୍ରୀ ଗଣେଶ ଆପଣଙ୍କ କ୍ୟାରିୟର ଏବଂ ଜୀବନରେ ସର୍ବଶ୍ରେଷ୍ଠ ସଫଳତା ଓ ଉନ୍ନତି ପ୍ରଦାନ କରନ୍ତୁ!",
+          closing: "ଶାଳକ ସନ୍ଦୀପ ତରଫରୁ ପ୍ରଣାମ ଓ ଗଣେଶ ପୂଜାର ହାର୍ଦ୍ଦିକ ଶୁଭେଚ୍ଛା! 🌟"
+        },
+        en: {
+          label: "Jijaji",
+          sub: "Brother-in-Law",
+          heading: "Happy Ganesh Chaturthi, {NAME} Bhai! 🚩",
+          quote: "You are not just a brother-in-law but a solid pillar and true elder brother to our family.\nThank you for always bringing honor, joy, and hearty laughs to every occasion.\nMay Lord Ganesha elevate your aspirations and deliver remarkable triumphs along your journey.",
+          closing: "Warm regards and best festive wishes! From Sandeep. 🌟"
+        }
+      },
+
+      bhanja: {
+        askName: true,
+        odia: {
+          label: "ଭଣଜା (Bhanja)",
+          sub: "My Nephew",
+          heading: "Happy Ganesh Puja, {NAME}! 🌟",
+          quote: "ମୋର ପ୍ରିୟ ଭଣଜା {NAME}! ତୁ ଆମ ପରିବାରର ଗର୍ବ ଓ ଭବିଷ୍ୟତ।\nଖୁବ୍ ମନ ଦେଇ ପାଠ ପଢ଼, ନିଜର ଦକ୍ଷତା ବଢ଼ାଅ ଆଉ ଆଗକୁ ବଢ଼।\nତୋ ସନ୍ଦୀପ ମାମୁଁ ତୋ ସହିତ ସବୁ ପରିସ୍ଥିତିରେ ଛିଡ଼ା ହୋଇଛି ଏବଂ ସବୁବେଳେ ସାହାଯ୍ୟ କରିବ।\nପ୍ରଭୁ ବିଦ୍ୟାଦାତା ଗଣେଶ ତୋତେ ପ୍ରଖର ବୁଦ୍ଧି ଏବଂ ଅପାର ସଫଳତା ପ୍ରଦାନ କରନ୍ତୁ!",
+          closing: "ତୋ ସନ୍ଦୀପ ମାମୁଁ ତରଫରୁ ଅଶେଷ ଆଶୀର୍ବାଦ ଓ ଭଲପାଇବା! 🚩"
+        },
+        en: {
+          label: "Bhanja",
+          sub: "Nephew",
+          heading: "Happy Ganesh Chaturthi, {NAME}! 🌟",
+          quote: "To my awesome nephew {NAME}! You are loaded with immense potential.\nStay curious, stay hungry to learn, and always walk forward with confidence.\nRemember your Sandeep Mamu will always be in your corner through thick and thin.\nMay Lord Ganesha bless your mind with brilliance and lead you toward outstanding feats!",
+          closing: "Loads of love and blessings from Sandeep Mamu! 🚩"
+        }
+      },
+
+      bhanji: {
+        askName: true,
+        odia: {
+          label: "ଭାଣିଜୀ (Bhanji)",
+          sub: "My Niece",
+          heading: "Happy Ganesh Puja, {NAME}! 💖",
+          quote: "ଆମ ଘରର ସବୁଠୁ ଲାଡ୍‌ଲି ଭାଣିଜୀ {NAME}! ତୁ ସବୁବେଳେ ଏମିତି ହସୁଥା।\nନିଜ ପରିଶ୍ରମ ବଳରେ ସବୁ ଲକ୍ଷ୍ୟ ହାସଲ କର ଏବଂ ନିଜ ପରିବାରର ନାଁ ଉଜ୍ଜ୍ୱଳ କର।\nତୋ ସନ୍ଦୀପ ମାମୁଁର ସ୍ନେହ ଆଉ ସହଯୋଗ ସବୁବେଳେ ତୋ ସାଙ୍ଗରେ ଅଛି।\nପ୍ରଭୁ ଗଣେଶ ତୋ ପଥକୁ ସର୍ବଦା ଆଲୋକିତ ଓ ସଫଳତାରେ ଭରି ରଖନ୍ତୁ!",
+          closing: "ମାମୁଁ ସନ୍ଦୀପ ତରଫରୁ ବହୁତ ସ୍ନେହ ଓ ଶୁଭେଚ୍ଛା! 🌸🍬"
+        },
+        en: {
+          label: "Bhanji",
+          sub: "Niece",
+          heading: "Happy Ganesh Chaturthi, {NAME}! 💖",
+          quote: "To my sweetest niece {NAME}! Your bright smile makes every day lighter.\nNever let any hurdle diminish your sparkle—keep pursuing your dreams with courage.\nYour Sandeep Mamu will always be cheering for you from the front row.\nMay Lord Ganesha keep your path safe, enlightened, and prosperous!",
+          closing: "Warmest hugs and prayers from Sandeep Mamu! 🌸🍬"
+        }
+      },
+
+      friend_male: {
+        askName: true,
+        odia: {
+          label: "ସାଙ୍ଗ (Male Friend)",
+          sub: "Bhai / Dost",
+          heading: "Happy Ganesh Chaturthi, {NAME} Bhai! 🍻⚡",
+          quote: "ଜୀବନର ସବୁ ମସ୍ତି, ବକ୍ବାସ୍ ଆଉ ସଂଘର୍ଷରେ ତୋ ଭଳି ଜଣେ ପ୍ରକୃତ ସାଙ୍ଗ ପାଇବା ସତରେ ଭାଗ୍ୟର କଥା।\nଆମର ଏହି ଭାଇଚାରା ସବୁବେଳେ ଏମିତି ହିଁ ମଜବୁତ୍ ରହୁ।\nତୋ ଲକ୍ଷ୍ୟ ପାଇଁ ଯାହା ଯାହା କରୁଛୁ, ସେଥିରେ ତୋତେ ଅସୀମ ସଫଳତା ମିଳୁ।\nବିଘ୍ନରାଜ ଗଣପତି ତୋ ରାସ୍ତାର ସବୁ ରୋଡ଼ବ୍ଲକ୍ ହଟାଇ ତୋତେ ଶୀର୍ଷରେ ପହଞ୍ଚାନ୍ତୁ!",
+          closing: "ତୋ ଭାଇ ସନ୍ଦୀପ ତରଫରୁ ଏକଦମ୍ ଦମଦାର୍ ଗଣେଶ ପୂଜାର ଶୁଭେଚ୍ଛା! 🔥"
+        },
+        en: {
+          label: "Male Friend",
+          sub: "Bro / Dost",
+          heading: "Happy Ganesh Chaturthi, {NAME}! 🍻⚡",
+          quote: "From late-night coding/talks to wild laughs and crazy dreams, having a loyal brother like you makes every hurdle easy.\nOur friendship is bulletproof and here to stay.\nKeep executing your vision relentlessly; the throne is waiting for you.\nMay Lord Ganesha wipe away every bottleneck and turbocharge your grind!",
+          closing: "Cheers to our unmatched brotherhood! From your buddy, Sandeep! 🔥"
+        }
+      },
+
+      friend_female: {
+        askName: true,
+        odia: {
+          label: "ସାଙ୍ଗ (Female Friend)",
+          sub: "Bestie / Friend",
+          heading: "Happy Ganesh Chaturthi, {NAME}! ✨🌸",
+          quote: "ଜଣେ ଭଲ ପରାମର୍ଶଦାତା ଏବଂ ପ୍ରକୃତ ବନ୍ଧୁ ଭାବରେ ତୋ ସାଥ୍ ସବୁବେଳେ ମୂଲ୍ୟବାନ।\nସବୁବେଳେ ଏମିତି ହସୁଥା, ସକାରାତ୍ମକ ରହ ଏବଂ ନିଜ ଲକ୍ଷ୍ୟ ପଛରେ ଲାଗିରହ।\nଆମର ଏହି ପବିତ୍ର ବନ୍ଧୁତା ସବୁଦିନ ଏମିତି ନିର୍ମଳ ରହୁ।\nବିଘ୍ନହର୍ତ୍ତା ଶ୍ରୀ ଗଣେଶ ତୋ ଜୀବନକୁ ସୁଖ, ଶାନ୍ତି ଏବଂ ଶ୍ରେଷ୍ଠ ସଫଳତାରେ ଭରିଦିଅନ୍ତୁ!",
+          closing: "ତୋ ଭଲ ସାଙ୍ଗ ସନ୍ଦୀପ ତରଫରୁ ହାର୍ଦ୍ଦିକ ଗଣେଶ ପୂଜାର ଶୁଭେଚ୍ଛା! 🌷"
+        },
+        en: {
+          label: "Female Friend",
+          sub: "Bestie / Friend",
+          heading: "Happy Ganesh Chaturthi, {NAME}! ✨🌸",
+          quote: "Having a true, sensible, and supportive friend like you brings immense positivity.\nThank you for always lending a patient ear and keeping our conversations genuine.\nNever lose that bright energy and confident spirit you carry.\nMay Lord Ganesha fulfill your deepest dreams and pave your way with golden opportunities!",
+          closing: "Wishing you radiant happiness and success! From Sandeep. 🌷"
+        }
+      }
+    };
+
+    function showView(viewId) {
+      document.querySelectorAll('.view-screen').forEach(el => el.classList.remove('active'));
+      document.getElementById(viewId).classList.add('active');
+
+      const backBtn = document.getElementById('backBtn');
+      if (viewId === 'screen-lang') {
+        backBtn.style.display = 'none';
+        viewHistory = ['screen-lang'];
+      } else {
+        backBtn.style.display = 'flex';
+      }
+    }
+
+    function chooseLang(lang) {
+      currentLang = lang;
+      viewHistory.push('screen-rel');
+      renderRelations();
+      showView('screen-rel');
+    }
+
+    function renderRelations() {
+      const title = document.getElementById('rel-title');
+      const grid = document.getElementById('rel-grid');
+      grid.innerHTML = '';
+
+      if (currentLang === 'odia') {
+        title.textContent = "ଆପଣ ସନ୍ଦୀପଙ୍କର କିଏ ହେବେ?";
+      } else {
+        title.textContent = "How are you related to Sandeep?";
+      }
+
+      for (const key in relationData) {
+        const item = relationData[key][currentLang];
+        const card = document.createElement('div');
+        card.className = 'choice-card';
+        card.innerHTML = `
+          <div class="main-txt">${item.label}</div>
+          <div class="sub-txt">${item.sub}</div>
+        `;
+        card.onclick = () => handleRelationClick(key);
+        grid.appendChild(card);
+      }
+    }
+
+    function handleRelationClick(key) {
+      selectedRelationKey = key;
+      const relInfo = relationData[key];
+
+      if (relInfo.askName) {
+        const inputTitle = document.getElementById('input-title');
+        const inputField = document.getElementById('user-nickname');
+        inputField.value = '';
+
+        if (currentLang === 'odia') {
+          inputTitle.textContent = "ଆପଣଙ୍କ ନାମ / Nickname ଲେଖନ୍ତୁ:";
+          inputField.placeholder = "ଏଠାରେ ନାମ ଲେଖନ୍ତୁ...";
+        } else {
+          inputTitle.textContent = "Enter your Name / Nickname:";
+          inputField.placeholder = "Type your name here...";
+        }
+
+        viewHistory.push('screen-input');
+        showView('screen-input');
+        setTimeout(() => inputField.focus(), 200);
+      } else {
+        renderWishScreen('');
+      }
+    }
+
+    function submitName() {
+      const inputField = document.getElementById('user-nickname');
+      let name = inputField.value.trim();
+      if (!name) {
+        name = currentLang === 'odia' ? "ମୋର ପ୍ରିୟଜନ" : "Dear";
+      }
+      renderWishScreen(name);
+    }
+
+    function renderWishScreen(enteredName) {
+      const relObj = relationData[selectedRelationKey];
+      const data = relObj[currentLang];
+
+      let headingText = data.heading;
+      let quoteText = data.quote;
+
+      if (relObj.askName) {
+        headingText = headingText.replace('{NAME}', enteredName);
+        quoteText = quoteText.replaceAll('{NAME}', enteredName);
+      }
+
+      document.getElementById('wish-headline').textContent = headingText;
+      document.getElementById('badge-rel').textContent = data.label;
+      document.getElementById('quote-content').textContent = quoteText;
+      document.getElementById('closing-content').textContent = data.closing;
+
+      viewHistory.push('screen-wish');
+      showView('screen-wish');
+    }
+
+    function goBack() {
+      if (viewHistory.length > 1) {
+        viewHistory.pop();
+        const prev = viewHistory[viewHistory.length - 1];
+        showView(prev);
+      }
+    }
+
+    document.getElementById('user-nickname').addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') {
+        submitName();
+      }
+    });
+  </script>
+</body>
+</html>
